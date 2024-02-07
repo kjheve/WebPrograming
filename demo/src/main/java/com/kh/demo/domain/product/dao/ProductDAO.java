@@ -1,4 +1,7 @@
+// DAO 코드
+
 package com.kh.demo.domain.product.dao;
+
 
 import com.kh.demo.domain.entity.Product;
 
