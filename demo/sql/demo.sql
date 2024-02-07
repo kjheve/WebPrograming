@@ -36,3 +36,31 @@ insert into product(product_id,pname,quantity,price)
      values(product_product_id_seq.nextval, '프린터', 1, 300000);
 
 commit;
+
+
+
+
+--------쿼리문 준비
+----목록
+--select product_id, pname, quantity, price, cdate, udate
+--  from product;
+--
+----단건조회
+--select product_id, pname, quantity, price, cdate, udate
+--  from product
+--  where product_id = 1;
+--
+----단건수정
+--update product
+--  set pname = '컴퓨터수정',
+--      quantity = 10,
+--      price = 2000000,
+--      udate = systimestamp
+--  where product_id = 1;
+--
+----단건삭제
+--delete from product
+--  where product_id = 1;
+----여러건 삭제
+--delete from product
+--  where product_id in ( 1, 2, 3 );
