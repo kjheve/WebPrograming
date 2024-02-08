@@ -2,9 +2,13 @@ package com.kh.demo.domain.product.dao;
 
 import com.kh.demo.domain.entity.Product;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @SpringBootTest // springboot 테스트환경 실행
@@ -14,6 +18,7 @@ class ProductDAOImplTest {
   ProductDAO productDAO;
 
   @Test
+  @DisplayName("상품등록")
   void save() {
 
     Product product = new Product();
@@ -27,4 +32,24 @@ class ProductDAOImplTest {
     log.info("productId={}{}", productId);
     
   }
+
+  @Test
+  @DisplayName("상품조회")
+  void findByID() {
+    Long productId = 1L;
+    Optional<Product> findedProduct = productDAO.findByID(productId);
+    Product product = findedProduct.orElse(null);
+    log.info("product = {}", product);
+  }
+
+  @Test
+  @DisplayName("상품목록")
+  void findAll() {
+    List<Product> list = productDAO.findAll();
+    for (Product product : list) {
+      log.info("product={}", product);
+    }
+    log.info("size={}", list.size());
+  }
+
 }

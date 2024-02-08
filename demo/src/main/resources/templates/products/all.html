@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품목록</title>
+  <style>
+    * {
+    outline:1px solid red;;
+    }
+
+    .row:hover {
+      background-color : yellow;
+    }
+  </style>
+</head>
+<body>
+  <h3>상품목록</h3>
+<div>
+<!--  table>thead>tr>td{상품번호}+td{상품명}-->
+  <table>
+    <thead>
+    <tr>
+      <td>상품번호</td>
+      <td>상품명</td>
+    </tr>
+    </thead>
+<!--    <tbody>-->
+<!--    <tr th:each="product :${list}"> &lt;!&ndash; 반복문 사용 &ndash;&gt;-->
+<!--      <td th:text="${product.productId}"></td>-->
+<!--&lt;!&ndash;      <td th:text="${product.pname}"></td>&ndash;&gt;-->
+<!--&lt;!&ndash;/* <td><a th:href="|/products/${product.productId}/detail|" th:text="${product.pname}"></a></td> */&ndash;&gt;-->
+<!--&lt;!&ndash;/* <td><a th:href="@{/products/{productId}/detail(productId=${product.productId})}" th:text="${product.pname}"></a></td> */&ndash;&gt;-->
+<!--    </tr>-->
+<!--    </tbody>-->
+
+    <tbody id="rows">
+      <tr class="row" th:each="product :${list}" th:data-product-id="${product.productId}"> <!-- 반복문 사용 -->
+        <td th:text="${product.productId}"></td>
+        <td th:text="${product.pname}"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div><button id="addBtn">등록</button></div>
+
+<script>
+  const $addBtn = document.getElementById('addBtn');
+  $addBtn.addEventListener('click', evt => {
+    // 목록에서 등록버튼을 누르면 상품 등록화면으로 가게하기
+    location.href = '/products/add';
+  });
+
+  const $rows = document.getElementById('rows');
+  $rows.addEventListener('click', evt => {
+    const $row = evt.target.closest('.row');
+    // 사용자 정의 속성을 이용해서 productId를 가져온다
+    const productId = $row.dataset.productId;
+    location.href = `/products/${productId}/detail`;
+  });
+</script>
+
+
+</body>
+</html>
