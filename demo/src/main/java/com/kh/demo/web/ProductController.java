@@ -24,7 +24,6 @@ public class ProductController {
   @GetMapping("/add") // Get, http://localhost:9080/products/add
   public String addForm() {
 
-
     return "products/add"; // view 이름 (상품 등록 화면)
     // resources/templates/products/add.html 파일 이름이 맞아야함
   }
@@ -49,6 +48,7 @@ public class ProductController {
     log.info("상품번호 = {}", productId);
 
     model.addAttribute("productId", productId);
+
     //상품조회
 
     return "products/detailForm"; // 상품조회 화면 (view 이름)
