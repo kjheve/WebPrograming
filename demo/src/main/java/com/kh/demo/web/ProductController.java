@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,14 +31,14 @@ public class ProductController {
 
   // ★상품등록처리
   @PostMapping("/add") // Post, http://localhost:9080/products/add
-  public String add(@RequestParam("pname") String pname,
+  public String add(@RequestParam("pname") String pname, // @RequestParam는 html의 name=""속성과 일치 ★☆★
                     @RequestParam("quantity") Long quantity,
                     @RequestParam("price") Long price,
-                    Model model) {
+                    Model model,
+                    RedirectAttributes redirectAttributes) {
     // @RequestParam() HTML의 input:name=""과 매핑
     log.info("pname = {}, quantity = {}, price = {}", pname, quantity, price);
-
-
+    
     // ★상품등록
     Product product = new Product();
     product.setPname(pname);
@@ -45,12 +46,12 @@ public class ProductController {
     product.setPrice(price);
     Long productId = productSVC.save(product);
 
-
 //    log.info("상품번호 = {}", productId);
 //        model.addAttribute("productId", productId); // 상품 번호만 찍는거
 
     // ------------------------------------------------------------------
 
+    /* 이제 필요없는 코드------------------------------
     // ★상품조회
     Optional<Product> findedProduct = productSVC.findByID(productId);
     product = findedProduct.orElseThrow();
@@ -59,9 +60,14 @@ public class ProductController {
 
 
     return "products/detailForm"; // 상품조회 화면 (view 이름)
+    ----------------------------------이제 필요없는 코드 */
+
+    redirectAttributes.addAttribute("pid", productId);
+    return "redirect:/products/{pid}/detail"; // 상품조회 화면 302 GET, http://localhost:9080/products/pid/detail
   }
 
-  // ★조회
+
+  // ★★★★★★★★조회★★★★★★★★
   @GetMapping("/{pid}/detail")     // GET, http://localhost:9080/products/상품번호(productId)/detail
   public String findById(@PathVariable("pid") Long productId, Model model) {
 
@@ -74,6 +80,28 @@ public class ProductController {
   }
   
   // ---------------------------------------------------------------------------------
+
+  // ★단건 삭제
+  @GetMapping("/{pid}/del")
+  public String deleteById(@PathVariable("pid") Long productId) {
+    log.info("deleteById={}", productId);
+
+    // 1) 상품 삭제 -> 상품 테이블에서 삭제
+    productSVC.deleteById(productId);
+
+    // 2) 상품 목록 -> 상품 테이블에서 상품목록을 가져와서 Model 객체에 저장 (이미 ★목록에 있음 redirect:로 요청)
+    return "redirect:/products"; // GET http://localhost:9080/products/
+  }
+
+  // ★여러건 삭제
+  @PostMapping("/del") // POST, http://localhost:9080/products/del
+  public String deleteByIds(@RequestParam("pids") List<Long> pids) {
+    log.info("deleteByIds={}", pids);
+    int deleteRowCnt = productSVC.deleteByIds(pids);
+
+    return "redirect:/products";
+  }
+
   
   // ★목록
   @GetMapping // GET, http://localhost:9080/products

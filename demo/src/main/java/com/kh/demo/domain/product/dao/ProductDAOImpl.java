@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -34,8 +35,8 @@ public class ProductDAOImpl implements ProductDAO {
     sql.append("insert into product(product_id,pname,quantity,price) ");
     sql.append("values(product_product_id_seq.nextval, :pname, :quantity, :price) ");
 
-    // SQL파라미터 자동매핑
-    SqlParameterSource param = new BeanPropertySqlParameterSource(product);
+    // SQL파라미터(매개변수) 자동매핑
+    SqlParameterSource param = new BeanPropertySqlParameterSource(product); // (파라미터 받아오기 첫번째 방법)
     KeyHolder keyHolder = new GeneratedKeyHolder();
 //    template.update(sql.toString(), param, keyHolder, new String[]{"product_id", "pname"}); // ★두개 넣으면 에러뜸
     template.update(sql.toString(), param, keyHolder, new String[]{"product_id"});
@@ -65,9 +66,10 @@ public class ProductDAOImpl implements ProductDAO {
                           // queryForObject는 값이 없으면 예외를 발생시킴 그래서 아래처럼
 
     try {
-      Map<String, Long> map = Map.of("productId", productId); // (키, 값)
+      Map<String, Long> map = Map.of("productId", productId); // (키, 값) (파라미터 받아오기 2번째방법)
       Product product = template.queryForObject(sql.toString(), map, BeanPropertyRowMapper.newInstance(Product.class));
       return Optional.of(product);
+
     } catch (EmptyResultDataAccessException e) {
       //조회 결과가 없는 경우
       return Optional.empty();
@@ -85,6 +87,32 @@ public class ProductDAOImpl implements ProductDAO {
     List<Product> list = template.query(sql.toString(), BeanPropertyRowMapper.newInstance(Product.class));
 
     return list;
+  }
+
+  // ★단건삭제
+  @Override
+  public int deleteById(Long productId) {
+    StringBuffer sql = new StringBuffer();
+    sql.append("delete from product ");
+    sql.append("where product_id = :productId ");
+
+    SqlParameterSource param = new MapSqlParameterSource()
+            .addValue("productId", productId); // (파라미터 받아오기 3번째 방법) 더있으면 .addValue로 계속해서..
+    int deleteRowCnt = template.update(sql.toString(), param);
+
+    return deleteRowCnt;
+  }
+
+  // ★여러건삭제
+  @Override
+  public int deleteByIds(List<Long> productIds) {
+    StringBuffer sql = new StringBuffer();
+    sql.append("delete from product ");
+    sql.append("where product_id in (:productIds) ");
+
+    Map<String, List<Long>> map = Map.of("productIds", productIds); // (키, 값) (파라미터 받아오기 2번째방법)
+    int deletedRowCnt = template.update(sql.toString(), map);
+    return deletedRowCnt;
   }
 
 

@@ -7,21 +7,28 @@
   <title>상품목록</title>
   <style>
     * {
-    outline:1px solid red;;
+    outline : 1px solid red;;
     }
 
     .row:hover {
       background-color : yellow;
     }
+
+    td {
+      text-align : center;
+    }
   </style>
 </head>
 <body>
   <h3>상품목록</h3>
-<div>
-<!--  table>thead>tr>td{상품번호}+td{상품명}-->
-  <table>
+
+  <form id="frm" action="/products/del" method="POST">
+    <div>
+    <!--  table>thead>tr>td{상품번호}+td{상품명}-->
+      <table>
     <thead>
     <tr>
+      <td>전체선택</td>
       <td>상품번호</td>
       <td>상품명</td>
     </tr>
@@ -37,29 +44,50 @@
 
     <tbody id="rows">
       <tr class="row" th:each="product :${list}" th:data-product-id="${product.productId}"> <!-- 반복문 사용 -->
+        <td><input type="checkbox" name="pids" th:value="${product.productId}"></td>
         <td th:text="${product.productId}"></td>
         <td th:text="${product.pname}"></td>
       </tr>
     </tbody>
   </table>
-</div>
-
-<div><button id="addBtn">등록</button></div>
+    </div>
+    <div>
+      <button id="delBtn" type="submit">삭제</button>
+      <button id="addBtn" type="button">등록</button>
+    </div>
+  </form>
 
 <script>
   const $addBtn = document.getElementById('addBtn');
   $addBtn.addEventListener('click', evt => {
     // 목록에서 등록버튼을 누르면 상품 등록화면으로 가게하기
-    location.href = '/products/add';
+    location.href = '/products/add';               // GET, http://localhost:9080/products/add
   });
 
+  // 버튼클릭시 디테일화면 가기
   const $rows = document.getElementById('rows');
   $rows.addEventListener('click', evt => {
+    if(evt.target.tagName === 'INPUT' && evt.target.getAttribute('type') == 'checkbox') { return; }
     const $row = evt.target.closest('.row');
     // 사용자 정의 속성을 이용해서 productId를 가져온다
     const productId = $row.dataset.productId;
     location.href = `/products/${productId}/detail`;
   });
+
+  // 여러건 삭제시 묻기
+  const $frm = document.getElementById('frm');
+  $frm.addEventListener('submit', evt => {
+  evt.preventDefault(); // 기본 이벤트 중지 (submit중지)
+  if(!window.confirm('삭제하시겠습니까?')) {
+    return;
+    }
+  evt.target.submit();
+  });
+
+  // 전체선택
+  // 1. 전체 체크하기
+  // 2. 모든 체크박스가 체크되어있다면 언체크
+
 </script>
 
 

@@ -2,11 +2,13 @@ package com.kh.demo.domain.product.dao;
 
 import com.kh.demo.domain.entity.Product;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,4 +54,26 @@ class ProductDAOImplTest {
     log.info("size={}", list.size());
   }
 
+  @Test
+  @DisplayName("상품삭제(단건)")
+  void deleteById() {
+    Long pid = 6L;
+    int deleteRowCnt = productDAO.deleteById(pid);
+    log.info("삭제건수={}", deleteRowCnt);
+    // 삭제한게 존재하는지 확인
+    Assertions.assertThat(deleteRowCnt).isEqualTo(1);
+  }
+
+  @Test
+  @DisplayName("상품삭제(여러건)")
+  void deleteByIds() {
+    List<Long> ids = new ArrayList<>();
+    ids.add(51L);
+    ids.add(50L);
+    ids.add(49L);
+//    productDAO.deleteByIds(List.of(51L, 50L, 49L));
+    int deleteRowCnt = productDAO.deleteByIds(ids);
+    log.info("삭제건수={}", deleteRowCnt);
+    Assertions.assertThat(deleteRowCnt).isEqualTo(ids.size());
+  }
 }
