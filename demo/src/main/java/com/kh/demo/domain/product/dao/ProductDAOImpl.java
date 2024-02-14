@@ -22,7 +22,6 @@ public class ProductDAOImpl implements ProductDAO {
 
   private final NamedParameterJdbcTemplate template;
 
-  // 생성자
   ProductDAOImpl(NamedParameterJdbcTemplate template) {
     this.template = template;
   }
@@ -113,6 +112,27 @@ public class ProductDAOImpl implements ProductDAO {
     Map<String, List<Long>> map = Map.of("productIds", productIds); // (키, 값) (파라미터 받아오기 2번째방법)
     int deletedRowCnt = template.update(sql.toString(), map);
     return deletedRowCnt;
+  }
+
+  // ★수정
+  @Override
+  public int updateById(Long productId, Product product) {
+    StringBuffer sql = new StringBuffer();
+    sql.append("update product ");
+    sql.append("set pname = :pname, ");
+    sql.append("    quantity = :quantity, ");
+    sql.append("    price = :price, ");
+    sql.append("    udate = default ");
+    sql.append("where product_id = :productId ");
+
+    // sql 파라미터 변수에 값 매핑
+    SqlParameterSource param = new MapSqlParameterSource().addValue("pname", product.getPname())
+            .addValue("quantity", product.getQuantity())
+            .addValue("price", product.getPrice())
+            .addValue("productId", productId);
+    // update 수행 후 변경된 행수 반환
+    int updateRowCnt = template.update(sql.toString(), param);
+    return updateRowCnt;
   }
 
 

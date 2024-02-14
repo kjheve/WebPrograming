@@ -67,13 +67,40 @@ class ProductDAOImplTest {
   @Test
   @DisplayName("상품삭제(여러건)")
   void deleteByIds() {
-    List<Long> ids = new ArrayList<>();
-    ids.add(51L);
-    ids.add(50L);
-    ids.add(49L);
+    List<Long> pids = new ArrayList<>();
+    pids.add(51L);
+    pids.add(50L);
+    pids.add(49L);
 //    productDAO.deleteByIds(List.of(51L, 50L, 49L));
-    int deleteRowCnt = productDAO.deleteByIds(ids);
+    int deleteRowCnt = productDAO.deleteByIds(pids);
     log.info("삭제건수={}", deleteRowCnt);
-    Assertions.assertThat(deleteRowCnt).isEqualTo(ids.size());
+    Assertions.assertThat(deleteRowCnt).isEqualTo(pids.size());
+  }
+
+  @Test
+  @DisplayName("상품수정")
+  void updateById() {
+
+    Long productId = 21L;
+    Product product = new Product();
+    product.setPname("대나무헬리곱터");
+    product.setQuantity(1L);
+    product.setPrice(1000L);
+
+    int updatedRowCnt = productDAO.updateById(productId, product);
+    log.info("updateRowCnt={}", updatedRowCnt);
+    if(updatedRowCnt == 0) {
+      Assertions.fail("변경 내역이 없습니다");
+    }
+    Optional<Product> optionalProduct = productDAO.findByID(productId);
+    if (optionalProduct.isPresent()) {
+      Product findedProduct = optionalProduct.get();
+      Assertions.assertThat(findedProduct.getPname()).isEqualTo("대나무헬리곱터");
+      Assertions.assertThat(findedProduct.getQuantity()).isEqualTo(1L);
+      Assertions.assertThat(findedProduct.getPrice()).isEqualTo(1000L);
+    } else {
+      Assertions.fail("변경할 상품이 없습니다");
+    }
+
   }
 }

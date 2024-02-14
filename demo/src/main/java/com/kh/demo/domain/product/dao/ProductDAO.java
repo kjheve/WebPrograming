@@ -28,4 +28,5 @@ public interface ProductDAO {
   int deleteByIds(List<Long> productIds);
 
   // ★수정
+  int updateById(Long productId, Product product);
 }

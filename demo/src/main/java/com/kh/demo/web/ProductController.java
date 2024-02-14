@@ -102,6 +102,37 @@ public class ProductController {
     return "redirect:/products";
   }
 
+  // ★수정양식
+  @GetMapping("/{pid}/edit") // GET, http://localhost:9080/products/상품번호/edit
+  public String updateForm(@PathVariable("pid") Long productId, Model model) {
+    Optional<Product> optionalProduct = productSVC.findByID(productId);
+    Product findedproduct = optionalProduct.orElseThrow();
+
+    model.addAttribute("product", findedproduct);
+    return "products/updateForm";
+  }
+
+  // ★수정처리
+  @PostMapping("/{pid}/edit")
+  public String update(
+          // 경로변수 pid로부터 상품번호를 읽어온다
+          @PathVariable("pid") Long productId,
+          @RequestParam("pname") String pname,
+          @RequestParam("quantity") Long quantity,
+          @RequestParam("price") Long price,
+          // 리다이렉트시 경로변수에 값을 설정하기위해 사용
+          RedirectAttributes redirectAttributes) {
+
+    Product product = new Product();
+    product.setPname(pname);
+    product.setQuantity(quantity);
+    product.setPrice(price);
+    int updateRowCnt = productSVC.updateById(productId, product);
+
+    redirectAttributes.addAttribute("pId", productId);
+    return "redirect:/products/{pId}/detail";
+  }
+
   
   // ★목록
   @GetMapping // GET, http://localhost:9080/products

@@ -21,4 +21,7 @@ public interface ProductSVC {
 
   // ★여러건삭제
   int deleteByIds(List<Long> productIds);
+
+  // ★수정
+  int updateById(Long productId, Product product);
 }
