@@ -25,6 +25,10 @@ create sequence product_product_id_seq;
 alter table product modify cdate default systimestamp; -- 운영체제 일시를 기본값으로
 alter table product modify udate default systimestamp; -- 운영체제 일시를 기본값으로
 
+--필수값들 NOT NULL
+alter table product modify quantity not null;
+alter table product modify price not null;
+
 --생성--
 insert into product(product_id,pname,quantity,price)
      values(product_product_id_seq.nextval, '컴퓨터', 5, 1000000);
@@ -38,29 +42,33 @@ insert into product(product_id,pname,quantity,price)
 commit;
 
 
+------쿼리문 준비
+--목록
+select product_id, pname, quantity, price, cdate, udate
+  from product
+  order by product_id desc;
+
+select count(*) from product;
+
+--단건조회
+select product_id, pname, quantity, price, cdate, udate
+  from product
+  where product_id = 21;
+
+--단건수정
+update product
+  set pname = '대나무헬리곱터',
+      quantity = 1,
+      price = 1000,
+      udate = default
+  where product_id = 21;
+
+--단건삭제
+delete from product
+  where product_id = 1;
+--여러건 삭제
+delete from product
+  where product_id in ( 1, 2, 3 );
 
 
---------쿼리문 준비
-----목록
---select product_id, pname, quantity, price, cdate, udate
---  from product;
---
-----단건조회
---select product_id, pname, quantity, price, cdate, udate
---  from product
---  where product_id = 1;
---
-----단건수정
---update product
---  set pname = '컴퓨터수정',
---      quantity = 10,
---      price = 2000000,
---      udate = systimestamp
---  where product_id = 1;
---
-----단건삭제
---delete from product
---  where product_id = 1;
-----여러건 삭제
---delete from product
---  where product_id in ( 1, 2, 3 );
+rollback;
