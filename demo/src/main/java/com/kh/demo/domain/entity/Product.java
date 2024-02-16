@@ -16,5 +16,5 @@ public class Product {
   private Long quantity;	// 수량 QUANTITY NUMBER(10,0)
   private Long price;     // 가격 PRICE	NUMBER(10,0)
   private LocalDateTime cdate; // 생성일시 CDATE	TIMESTAMP(6)
-  private LocalDateTime update; // 수정일시 UDATE	TIMESTAMP(6)
+  private LocalDateTime udate; // 수정일시 UDATE	TIMESTAMP(6)
 }
