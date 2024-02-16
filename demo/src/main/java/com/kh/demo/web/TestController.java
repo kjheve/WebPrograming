@@ -1,4 +1,4 @@
-// 타임리프 test1을 위한 컨트롤러 (타임리프 연습)
+// 타임리프 test2을 위한 컨트롤러 (타임리프 연습)
 
 package com.kh.demo.web;
 
@@ -79,5 +79,14 @@ public class TestController {
     return "redirect:/test/t2";
   }
 
+
+
+
+
+  // TestControllerV2에서 테스트할 url 매핑
+  @GetMapping("/url/t1")         // GET http://localhost:9080/test/url/t1
+  public String url_t1() {
+    return "test/url";
+  }
 
 }

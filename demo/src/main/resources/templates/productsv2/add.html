@@ -23,33 +23,33 @@
   </style>
 </head>
 <body>
-<h3>상품등록</h3>
-<form id='frm' action="/products/add" method="post">
+<h3 th:text="#{title.product.add}">상1품1등1록</h3>
+<form id='frm' action="/products/add" method="post" th:object="${addForm}">
   <div><span class="err-msg" id="errGlobal">errGlobal(Client)</span></div>
   <div th:if="${s_err_global != null and #strings.length(s_err_global) > 0}">
     <span class="err-msg" th:class="'err-msg on'" th:text="${s_err_global}">errGlobal(S)</span>
   </div>
   <div>
-    <label for="pname">상품명</label>
-    <input id="pname" name="pname" type="text" placeholder="영문/숫자/한글/_-가능" th:value="${addForm.pname}">
+    <label for="pname" th:text="#{label.product.pname}">상품명</label>
+    <input id="pname" name="pname" type="text" placeholder="영문/숫자/한글/_-가능" th:value="*{pname}">
     <span class="err-msg" id="errPname">errPname(Client)</span>
     <span class="err-msg" th:if="${s_err_pname != ''}" th:class="'err-msg on'" th:text="${s_err_pname}">errPname(Server)</span>
   </div>
   <div>
-    <label for="quantity">수량</label>
-    <input id="quantity" name="quantity" type="text" placeholder="숫자0~9사이 입력가능 1~10자리" th:value="${addForm.quantity}">
+    <label for="quantity" th:text="#{label.product.quantity}">수량</label>
+    <input id="quantity" name="quantity" type="text" placeholder="숫자0~9사이 입력가능 1~10자리" th:value="*{quantity}">
     <span class="err-msg" id="errQuantity">errQuantity(C)</span>
     <span class="err-msg" th:if="${s_err_quantity != ''}" th:class="'err-msg on'" th:text="${s_err_quantity}">errQuantity(S)</span>
   </div>
-  <div><label for="price">가격</label>
-    <input id="price" name="price" type="text" placeholder="숫자0~9사이 입력가능 1~10자리" th:value="${addForm.price}">
+  <div><label for="price" th:text="#{label.product.price}">가격</label>
+    <input id="price" name="price" type="text" placeholder="숫자0~9사이 입력가능 1~10자리" th:value="*{price}">
     <span class="err-msg" id="errPrice">errPrice(C)</span>
     <span class="err-msg" th:if="${s_err_price != ''}" th:class="'err-msg on'" th:text="${s_err_price}">errPrice(S)</span>
   </div>
   <div>
-    <input type="reset" value="취소">
-    <input type="submit" value="저장">
-    <input type="button" value="목록" onclick="location.href='/products'">
+    <input type="reset" value="취소" th:value="#{button.cancel}">
+    <input type="submit" value="저장" th:value="#{button.save}">
+    <input type="button" value="목록" th:value="#{button.list}" onclick="location.href='/products'">
   </div>
 </form>
 <script>
