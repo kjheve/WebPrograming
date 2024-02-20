@@ -34,7 +34,7 @@
 
     <div>
       <input id="modifyBtn" type="button" value="수정" th:value="#{button.update}">
-      <input id="deleteBtn" type="button" value="삭제" th:value="#{button.delete">
+      <input id="deleteBtn" type="button" value="삭제" th:value="#{button.delete}">
       <input id="listBtn" type="button" value="목록" th:value="#{button.list}">
     </div>
   </form>
@@ -75,11 +75,18 @@
     const $delItemBtn = document.getElementById('delItemBtn'); //삭제버튼 모달창
 
     $delModal.addEventListener('close',evt=>{
-      if($delModal.returnValue == 'ok'){
-        location.href = `/products/${pid}/del`; // GET http://서버주소 or 서버도메인/products/상품번호/del
-      }
-    });
-
+    if($delModal.returnValue == 'ok'){
+      //location.href = `/products/${pid}/del`; // GET http://서버주소 or 서버도메인/products/상품번호/del
+      const url = `/products/${pid}/del`;
+      fetch(url, { method: 'DELETE'})
+        .then(res=>{
+          if(res.ok){  // 상태코드 200 ok인 경우
+            location.href = '/products';
+          }else{
+            alert('삭제실패');
+          }
+        });
+      }});
     // 취소버튼 모달창
     $cancelBtn.addEventListener('click', evt=>{
       $delModal.close('cancel');
